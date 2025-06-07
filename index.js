@@ -8,6 +8,7 @@ app.use(express.json());
 app.post("/webhook", async (req, res) => {
   const parameters = req.body.sessionInfo?.parameters || {};
   const tag = req.body.fulfillmentInfo?.tag; // This identifies the intent or step
+  console.log('Webhook called. Full body:', JSON.stringify(req.body, null, 2));
 
   let responseMessage = "Sorry, I didn’t understand your request.";
 
