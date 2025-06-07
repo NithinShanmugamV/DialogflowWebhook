@@ -8,14 +8,13 @@ app.use(express.json());
 app.post("/webhook", async (req, res) => {
   const parameters = req.body.sessionInfo?.parameters || {};
   const tag = req.body.fulfillmentInfo?.tag; // This identifies the intent or step
-  console.log('Webhook called. Full body:', JSON.stringify(req.body, null, 2));
 
   let responseMessage = "Sorry, I didn’t understand your request.";
 
   try {
     switch (tag) {
       case "check-order-status": {
-        const result = await checkOrderStatus(parameters.orderId);
+        const result = await checkOrderStatus(parameters.order_id);
         responseMessage = result.status === 200
           ? `Your order ${result.order_id} is ${result.delivery_status}.`
           : result.message;
