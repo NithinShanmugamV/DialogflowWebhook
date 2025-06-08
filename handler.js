@@ -51,6 +51,19 @@ async function checkProduct(productId) {
     return { status: 500, message: "Internal server error while fetching product." };
   }
 }
+async function checkProductAll(productId) {
+  try {
+    const res = await axios.get(`${PRODUCT_API_URL}?product_sku=${productId}`);
+    if (res.status === 200 && res.data) {
+      return { status: 200, ...res.data[0] };
+    }
+
+    return { status: 404, message: `Product ${productId} not found.` };
+  } catch (error) {
+    console.error(`Product fetch error:`, error.message);
+    return { status: 500, message: "Internal server error while fetching product." };
+  }
+}
 
 async function checkCustomer(customerId) {
   try {
@@ -87,4 +100,5 @@ module.exports = {
   checkProduct,
   checkCustomer,
   checkCustomerEmail,
+  checkProductAll
 };
