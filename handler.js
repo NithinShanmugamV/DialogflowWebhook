@@ -6,8 +6,7 @@ const CUSTOMER_API_URL = "https://jsonserver-eyex.onrender.com/customers";
 
 async function checkOrderStatus(orderId) {
   try {
-    const res = await axios.get(`${STORE_API_URL}?order_id=${orderId}`);
-
+    const res = await axios.get(`${STORE_API_URL}?orderId=${orderId}`);
     if (res.status === 200 && Array.isArray(res.data) && res.data.length > 0) {
       const order = res.data[0];
       return { status: 200, ...order };
