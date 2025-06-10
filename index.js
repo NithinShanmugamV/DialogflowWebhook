@@ -23,7 +23,7 @@ app.post("/webhook", async (req, res) => {
         payload = result
         responseMessage =
           result.status === 200
-            ? `Your order ${result.order_id} is ${result.delivery_status}.`
+            ? `Can you select the product from your order below`
             : result.message;
         break;
       }
