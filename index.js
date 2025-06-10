@@ -14,11 +14,13 @@ app.post("/webhook", async (req, res) => {
   const tag = req.body.fulfillmentInfo?.tag; // This identifies the intent or step
   let responseMessage = "Sorry, I didn’t understand your request.";
   let data = null;
+  let payload = null;
 
   try {
     switch (tag) {
       case "check-order-status": {
         const result = await checkOrderStatus(parameters.orderId);
+        payload = result
         responseMessage =
           result.status === 200
             ? `Your order ${result.order_id} is ${result.delivery_status}.`
@@ -59,13 +61,7 @@ app.post("/webhook", async (req, res) => {
         responseMessage = "Unrecognized action requested.";
     }
 
-    if (tag !== "check-product-all")
-      await res.json({
-        fulfillment_response: {
-          messages: [{ text: { text: [responseMessage] } }],
-        },
-      });
-    else {
+    if (tag == "check-product-all")
       await res.json({
         sessionInfo: {
           parameters: {
@@ -80,6 +76,19 @@ app.post("/webhook", async (req, res) => {
               },
             },
           ],
+        },
+      });
+    else if(tag == "check-order-status"){
+      await res.json({
+        fulfillment_response: {
+          messages: [{ text: { text: [responseMessage] } }, {payload: payload}],
+        },
+      });
+    }
+    else {
+      await res.json({
+        fulfillment_response: {
+          messages: [{ text: { text: [responseMessage] } }],
         },
       });
     }
