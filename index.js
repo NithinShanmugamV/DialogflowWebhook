@@ -19,7 +19,7 @@ app.post("/webhook", async (req, res) => {
   try {
     switch (tag) {
       case "check-order-status": {
-        const result = await checkOrderStatus(parameters.orderId);
+        const result = await checkOrderStatus(parameters.order_id);
         payload = result
         responseMessage =
           result.status === 200
