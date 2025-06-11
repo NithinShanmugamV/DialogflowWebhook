@@ -1,9 +1,8 @@
 const express = require("express");
 const {
   checkOrderStatus,
-  checkOrderCustomer,
-  checkProduct,
-  checkProductAll
+  checkProductAll,
+  checkOrderItemStatus
 } = require("./handler");
 
 const app = express();
@@ -23,25 +22,16 @@ app.post("/webhook", async (req, res) => {
         payload = result
         responseMessage =
           result.status === 200
-            ? `Can you select the product from your order below`
-            : result.message;
-        break;
-      }
-
-      case "check-order-customer": {
-        const result = await checkOrderCustomer(parameters.customer_id);
-        responseMessage =
-          result.status === 200
             ? `Your order ${result.order_id} is ${result.delivery_status}.`
             : result.message;
         break;
       }
-
-      case "check-product": {
-        const result = await checkProduct(parameters.product_id);
+      case "check-order-product": {
+        const result = await checkOrderItemStatus(parameters.order_id, parameters.product_sku);
+        data = result
         responseMessage =
           result.status === 200
-            ? `Product ${result.product_name} is available for ${result.cost_of_product}.`
+            ? `Thank you for sharing all information`
             : result.message;
         break;
       }
@@ -81,7 +71,21 @@ app.post("/webhook", async (req, res) => {
     else if(tag == "check-order-status"){
       await res.json({
         fulfillment_response: {
-          messages: [{ text: { text: [responseMessage] } }, {payload: payload}],
+          messages: [{ text: { text: [responseMessage] } }, {payload: {
+            userSelect: payload.products
+          }}],
+        },
+      });
+    }
+    else if(tag == "check-order-product"){
+      await res.json({
+        sessionInfo: {
+          parameters: {
+            ...data,
+          },
+        },
+        fulfillment_response: {
+          messages: [{ text: { text: [responseMessage] } }],
         },
       });
     }
