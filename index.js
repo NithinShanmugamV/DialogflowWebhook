@@ -22,17 +22,13 @@ app.post("/webhook", async (req, res) => {
         payload = result
         responseMessage =
           result.status === 200
-            ? `Your order ${result.order_id} is ${result.delivery_status}.`
+            ? `Can you select product from your order`
             : result.message;
         break;
       }
       case "check-order-product": {
         const result = await checkOrderItemStatus(parameters.order_id, parameters.product_sku);
         data = result
-        responseMessage =
-          result.status === 200
-            ? `Thank you for sharing all information`
-            : result.message;
         break;
       }
       case "check-product-all": {
@@ -83,10 +79,7 @@ app.post("/webhook", async (req, res) => {
           parameters: {
             ...data,
           },
-        },
-        fulfillment_response: {
-          messages: [{ text: { text: [responseMessage] } }],
-        },
+        }
       });
     }
     else {
