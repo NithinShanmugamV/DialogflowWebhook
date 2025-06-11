@@ -7,7 +7,7 @@ const PRODUCT_API_URL = "https://jsonserver-eyex.onrender.com/products";
 async function checkOrderStatus(orderId) {
   try {
     const res = await axios.get(`${ORDER_API_URL}?order_id=${orderId}`);
-    if (res.status === 200 && Array.isArray(res.data) && res.data.length > 0) {
+    if (res.status === 200) {
       const order = res.data[0];
       return { status: 200, ...order };
     }
@@ -22,7 +22,7 @@ async function checkOrderStatus(orderId) {
 async function checkOrderItemStatus(orderId, product_sku) {
   try {
     const res = await axios.get(`${ORDER_ITEMS_API_URL}?order_id=${orderId}&product_sku=${product_sku}`);
-    if (res.status === 200 && Array.isArray(res.data) && res.data.length > 0) {
+    if (res.status === 200) {
       const order = res.data[0];
       return { status: 200, ...order };
     }
